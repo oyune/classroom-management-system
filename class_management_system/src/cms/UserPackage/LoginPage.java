@@ -25,7 +25,63 @@ public class LoginPage extends javax.swing.JFrame {
     public LoginPage() {
         initComponents();
     }
+    
+    String studnet_id = null;
+    String professor_id = null;
+    String assistant_id = null;
 
+        private boolean LoginCompare(int check) {
+        ConnectDB db = new ConnectDB();
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        try {
+            conn = db.getConnection();
+            st = conn.createStatement();
+            rs = st.executeQuery("select id,pw from client");
+
+            ArrayList<String> id_list = new ArrayList<String>();
+            ArrayList<String> pw_list = new ArrayList<String>();
+
+            while (rs.next()) {
+                id_list.add(rs.getString("id"));
+                pw_list.add(rs.getString("pw"));
+            }
+
+            int ch = 0;
+            int index = 0;
+
+            for (int i = 0; i < id_list.size(); i++) {
+                if (id_input.getText().equals(id_list.get(i)) && pw_input.getText().equals(pw_list.get(i))) {
+                    JOptionPane.showMessageDialog(null, "로그인 성공");
+                    index = i;
+                    ch = -1;
+                    if (check == 83) {
+                        studnet_id = id_list.get(index);
+                    }
+                    else if (check == 80) {
+                        professor_id = id_list.get(index);
+                    }
+                    else if (check == 65) {
+                        assistant_id = id_list.get(index);
+                    }
+                    return true;
+                }
+            }
+
+            if (ch == 0) {
+                JOptionPane.showMessageDialog(null, "잘못된 입력입니다. 다시 로그인해 주세요.");
+                id_input.setText(null);
+                pw_input.setText(null);
+            }
+            conn.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -101,38 +157,34 @@ public class LoginPage extends javax.swing.JFrame {
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
         // TODO add your handling code here:
-        ConnectDB db = new ConnectDB();
-        Connection conn=null;
-        Statement st= null;
-        ResultSet rs = null;
-        
-        try{
-            conn=db.getConnection();
-            st = conn.createStatement();
-            rs=st.executeQuery("select id, pw from client");
-            
-            ArrayList<String> id_list = new ArrayList<String>();
-            ArrayList<String> pw_list = new ArrayList<String>();
-            
-            while(rs.next()){
-                id_list.add(rs.getString("id"));
-                pw_list.add(rs.getString("pw"));
-            }
-            
-            int login=0;
-            
-            for(int i=0;i<id_list.size();i++){
-                if(id_input.getText().equals(id_list.get(i))&& pw_input.getText().equals(pw_list.get(i))){
-                    JOptionPane.showMessageDialog(null, "로그인 성공"); 
+         boolean check = false;
+        char first = id_input.getText().charAt(0);
+
+        switch (first) { // 추후 사용자별로 페이지 연결하기
+            case 83:
+                check = LoginCompare('S');
+                if (check) {
+                    System.out.println("학생 로그인 성공");
+                    break;
+                } else {
+                    break;
                 }
-            }
-            
-            if(login==0){
-                JOptionPane.showMessageDialog(null, "로그인 실패"); 
-            }
-           conn.close();
-        }  catch (Exception ex) {
-            ex.printStackTrace();
+            case 80:
+                check = LoginCompare('P');
+                if (check) {
+                    System.out.println("교수 로그인 성공");
+                    break;
+                } else {
+                    break;
+                }
+            case 65:
+                check = LoginCompare('A');
+                if (check) {
+                    System.out.println("조교 로그인 성공");
+                    break;
+                } else {
+                    break;
+                }
         }
     }//GEN-LAST:event_loginActionPerformed
 
