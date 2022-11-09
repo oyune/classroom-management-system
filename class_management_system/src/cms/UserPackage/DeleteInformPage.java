@@ -34,15 +34,11 @@ public class DeleteInformPage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        id_input = new javax.swing.JTextField();
         pw_input = new javax.swing.JTextField();
         deleteInform_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setText("아이디 (삭제 필요)");
 
         jLabel2.setText("비밀번호 확인");
 
@@ -61,13 +57,9 @@ public class DeleteInformPage extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(48, 48, 48)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(56, 56, 56)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(id_input)
-                            .addComponent(pw_input, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel2)
+                        .addGap(82, 82, 82)
+                        .addComponent(pw_input, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(161, 161, 161)
                         .addComponent(deleteInform_button)))
@@ -76,11 +68,7 @@ public class DeleteInformPage extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(66, 66, 66)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(id_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(42, 42, 42)
+                .addGap(129, 129, 129)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(pw_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -100,27 +88,24 @@ public class DeleteInformPage extends javax.swing.JFrame {
         Statement st = null;
         ResultSet rs = null;
 
-        String id = id_input.getText();
         String pw = pw_input.getText();
 
         try {
             conn = db.getConnection();
             st = conn.createStatement();
-            rs = st.executeQuery("select id, pw from Client");
+            rs = st.executeQuery("select id from Client");
 
             ArrayList<String> id_list = new ArrayList<String>();
-            ArrayList<String> pw_list = new ArrayList<String>();
 
             while (rs.next()) {
                 id_list.add(rs.getString("id"));
-                pw_list.add(rs.getString("pw"));
             }
 
-            int ch = 0; // 회원삭제 성공 여부 확인
+            int ch = 0; // 회원탈퇴 성공 여부 확인
 
             for (int i = 0; i < id_list.size(); i++) {
-                if (id_input.getText().equals(id_list.get(i)) && pw_input.getText().equals(pw_list.get(i))) {
-                    ps = conn.prepareStatement("delete from Client where id='" + id + "'");
+                if (LoginPage.final_id.equals(id_list.get(i)) && pw_input.getText().equals(LoginPage.final_pw)) {
+                    ps = conn.prepareStatement("delete from Client where id='" + LoginPage.final_id + "'");
                     ps.executeUpdate();
 
                     JOptionPane.showMessageDialog(null, "회원 정보 삭제가 완료되었습니다.");
@@ -129,7 +114,6 @@ public class DeleteInformPage extends javax.swing.JFrame {
             }
             if (ch == 0) {
                 JOptionPane.showMessageDialog(null, "없는 정보입니다. 다시 입력해주세요.");
-                id_input.setText(null);
                 pw_input.setText(null);
             }
             conn.close();
@@ -175,8 +159,6 @@ public class DeleteInformPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteInform_button;
-    private javax.swing.JTextField id_input;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField pw_input;
     // End of variables declaration//GEN-END:variables

@@ -34,12 +34,10 @@ public class ChangeInformPage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        id_input = new javax.swing.JTextField();
         pw_input = new javax.swing.JTextField();
         name_input = new javax.swing.JTextField();
         tel_input = new javax.swing.JTextField();
@@ -47,8 +45,6 @@ public class ChangeInformPage extends javax.swing.JFrame {
         changeInform_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setText("아이디 (삭제 필요)");
 
         jLabel2.setText("비밀번호");
 
@@ -72,20 +68,15 @@ public class ChangeInformPage extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(70, 70, 70)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5))
-                                .addGap(30, 30, 30)))
-                        .addGap(58, 58, 58)
+                        .addGap(94, 94, 94)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addGap(88, 88, 88)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(id_input, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                            .addComponent(pw_input)
+                            .addComponent(pw_input, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
                             .addComponent(name_input)
                             .addComponent(tel_input)
                             .addComponent(email_input)))
@@ -97,13 +88,9 @@ public class ChangeInformPage extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(73, 73, 73)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(id_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(pw_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -134,31 +121,20 @@ public class ChangeInformPage extends javax.swing.JFrame {
         Statement st = null;
         ResultSet rs = null;
 
-        String id = id_input.getText();
         String pw = pw_input.getText();
         String name = name_input.getText();
         String tel = tel_input.getText();
         String email = email_input.getText();
 
-        try {
+         try {
             conn = db.getConnection();
             st = conn.createStatement();
-            rs = st.executeQuery("select id from Client");
 
-            ArrayList<String> id_list = new ArrayList<String>();
+            ps = conn.prepareStatement("update Client set id='" + LoginPage.final_id + "',pw='" + pw + "',name='" + name + "', tel='" + tel + "', email='" + email + "' where id='" + LoginPage.final_id + "'");
+            ps.executeUpdate();
 
-            while (rs.next()) {
-                id_list.add(rs.getString("id"));
-            }
+            JOptionPane.showMessageDialog(null, "정보수정이 완료되었습니다.");
 
-            for (int i = 0; i < id_list.size(); i++) {
-                if (id_input.getText().equals(id_list.get(i))) {
-                    ps = conn.prepareStatement("update Client set id='" + id + "',pw='" + pw + "',name='" + name + "', tel='" + tel + "', email='" + email + "' where id='" + id + "'");
-                    ps.executeUpdate();
-
-                    JOptionPane.showMessageDialog(null, "정보수정이 완료되었습니다.");
-                }
-            }
             conn.close();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -203,8 +179,6 @@ public class ChangeInformPage extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton changeInform_button;
     private javax.swing.JTextField email_input;
-    private javax.swing.JTextField id_input;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

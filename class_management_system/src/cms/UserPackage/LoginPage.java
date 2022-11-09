@@ -26,9 +26,8 @@ public class LoginPage extends javax.swing.JFrame {
         initComponents();
     }
     
-    String studnet_id = null;
-    String professor_id = null;
-    String assistant_id = null;
+    static String final_id = null;
+    static String final_pw = null;
 
         private boolean LoginCompare(int check) {
         ConnectDB db = new ConnectDB();
@@ -39,7 +38,7 @@ public class LoginPage extends javax.swing.JFrame {
         try {
             conn = db.getConnection();
             st = conn.createStatement();
-            rs = st.executeQuery("select id,pw from client");
+            rs = st.executeQuery("select id, pw from client");
 
             ArrayList<String> id_list = new ArrayList<String>();
             ArrayList<String> pw_list = new ArrayList<String>();
@@ -58,13 +57,24 @@ public class LoginPage extends javax.swing.JFrame {
                     index = i;
                     ch = -1;
                     if (check == 83) {
-                        studnet_id = id_list.get(index);
+                        final_id = id_list.get(index);
+                        final_pw = pw_list.get(index);
+                        
+                        // 테스트용
+                        ChangeInformPage change = new ChangeInformPage();
+                        change.setVisible(true);
                     }
                     else if (check == 80) {
-                        professor_id = id_list.get(index);
+                        final_id = id_list.get(index);
+                        final_pw = pw_list.get(index);
+                        
+                        // 테스트용 
+                        DeleteInformPage delete = new DeleteInformPage();
+                        delete.setVisible(true);
                     }
                     else if (check == 65) {
-                        assistant_id = id_list.get(index);
+                        final_id = id_list.get(index);
+                        final_pw = pw_list.get(index);
                     }
                     return true;
                 }

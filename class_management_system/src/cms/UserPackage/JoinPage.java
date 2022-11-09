@@ -29,7 +29,7 @@ public class JoinPage extends javax.swing.JFrame {
 
     String type = null;
 
-    public boolean UserTypeCheck() {    // 사용자를 구분하기 위함.
+    private boolean UserTypeCheck() {    // 사용자를 구분하기 위함.
 
         char first = id_input.getText().charAt(0);
 
@@ -40,8 +40,6 @@ public class JoinPage extends javax.swing.JFrame {
         } else if (first == 'P') {
             type = "3";
         } else {
-            JOptionPane.showMessageDialog(null, "옳바르지 않은 사용자 유형입니다.");
-            id_input.setText(null);
             return false;
         }
         return true;
