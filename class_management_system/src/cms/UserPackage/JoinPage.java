@@ -24,6 +24,26 @@ public class JoinPage extends javax.swing.JFrame {
         initComponents();
     }
 
+    String type = null;
+
+    public boolean UserTypeCheck() {    // 사용자를 구분하기 위함.
+
+        char first = id_input.getText().charAt(0);
+
+        if (first == 'S') {
+            type = "1";
+        } else if (first == 'A') {
+            type = "2";
+        } else if (first == 'P') {
+            type = "3";
+        } else {
+            JOptionPane.showMessageDialog(null, "옳바르지 않은 사용자 유형입니다.");
+            id_input.setText(null);
+            return false;
+        }
+        return true;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -127,23 +147,26 @@ public class JoinPage extends javax.swing.JFrame {
         Connection conn = null;
         PreparedStatement ps = null;
 
+        boolean usertype = UserTypeCheck();
+
         try {
             conn = db.getConnection();
             ps = conn.prepareStatement("insert into Client values(?,?,?,?,?,?,?,?)");
 
-            ps.setString(1, id_input.getText());
-            ps.setString(2, pw_input.getText());
-            ps.setInt(3, 1);    // 인증여부
-            ps.setString(4, "1");   // 사용자 유형
-            ps.setInt(5, 0);    // 경고
-            ps.setString(6, name_input.getText());
-            ps.setString(7, tel_input.getText());
-            ps.setString(8, email_input.getText());
+            if (usertype) {
+                ps.setString(1, id_input.getText());
+                ps.setString(2, pw_input.getText());
+                ps.setInt(3, 1);    // 인증여부
+                ps.setString(4, type);   // 사용자 유형
+                ps.setInt(5, 0);    // 경고
+                ps.setString(6, name_input.getText());
+                ps.setString(7, tel_input.getText());
+                ps.setString(8, email_input.getText());
 
-            ps.executeUpdate();
+                ps.executeUpdate();
 
-            JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");
-
+                JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");
+            }
             conn.close();
         } catch (Exception ex) {
             ex.printStackTrace();
