@@ -8,7 +8,10 @@ import cms.ConnectDB.ConnectDB;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -44,6 +47,36 @@ public class JoinPage extends javax.swing.JFrame {
         return true;
     }
 
+    private boolean TokenCheck() {  // 토큰값 일치 여부 확인
+        ConnectDB db = new ConnectDB();
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        try {
+            conn = db.getConnection();
+            st = conn.createStatement();
+            rs = st.executeQuery("select token from Token");
+
+            ArrayList<String> t_list = new ArrayList<String>();
+
+            while (rs.next()) {
+                System.out.println(rs.getString("token"));
+                t_list.add(rs.getString("token"));
+            }
+
+            for (int i = 0; i < t_list.size(); i++) {
+                if (token_input.getText().equals(t_list.get(i))) {
+                    return true;
+                }
+            }
+            conn.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -64,6 +97,8 @@ public class JoinPage extends javax.swing.JFrame {
         tel_input = new javax.swing.JTextField();
         email_input = new javax.swing.JTextField();
         join_button = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        token_input = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -84,6 +119,8 @@ public class JoinPage extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setText("토큰번호");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -91,29 +128,31 @@ public class JoinPage extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(77, 77, 77)
+                        .addGap(149, 149, 149)
+                        .addComponent(join_button))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(76, 76, 76)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(jLabel5)
                             .addComponent(jLabel4)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel6))
                         .addGap(63, 63, 63)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(id_input, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                            .addComponent(id_input)
                             .addComponent(pw_input)
                             .addComponent(name_input)
                             .addComponent(tel_input)
-                            .addComponent(email_input)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(149, 149, 149)
-                        .addComponent(join_button)))
-                .addContainerGap(85, Short.MAX_VALUE))
+                            .addComponent(email_input, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                            .addComponent(token_input))))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(70, 70, 70)
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(id_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -133,7 +172,11 @@ public class JoinPage extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
                     .addComponent(email_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addComponent(token_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addComponent(join_button)
                 .addContainerGap())
         );
@@ -148,28 +191,38 @@ public class JoinPage extends javax.swing.JFrame {
         PreparedStatement ps = null;
 
         boolean usertype = UserTypeCheck();
+        boolean tokencheck = TokenCheck();
 
         try {
             conn = db.getConnection();
-            ps = conn.prepareStatement("insert into Client values(?,?,?,?,?,?,?,?)");
+            ps = conn.prepareStatement("insert into Client values(?,?,?,?,?,?,?)");
 
-            if (usertype) {
-                ps.setString(1, id_input.getText());
-                ps.setString(2, pw_input.getText());
-                ps.setString(3, type);   // 사용자 유형
-                ps.setInt(4, 0);    // 경고
-                ps.setString(5, name_input.getText());
-                ps.setString(6, tel_input.getText());
-                ps.setString(7, email_input.getText());
+            if (tokencheck) {
+                if (usertype) {
+                    ps.setString(1, id_input.getText());
+                    ps.setString(2, pw_input.getText());
+                    ps.setString(3, type);   // 사용자 유형
+                    ps.setInt(4, 0);    // 경고
+                    ps.setString(5, name_input.getText());
+                    ps.setString(6, tel_input.getText());
+                    ps.setString(7, email_input.getText());
 
-                ps.executeUpdate();
+                    ps.executeUpdate();
 
-                JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");
+                    JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "옳바르지 않은 사용자 유형입니다.");
+                    id_input.setText(null);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "옳바르지 않은 토큰값 입니다.");
+                token_input.setText(null);
             }
             conn.close();
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "기존에 있는 회원입니다.");
+            JOptionPane.showMessageDialog(null, "옳바르지 않은 입력입니다. 다시 입력해주세요.");
             id_input.setText(null);
         }
     }//GEN-LAST:event_join_buttonActionPerformed
@@ -218,9 +271,11 @@ public class JoinPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JButton join_button;
     private javax.swing.JTextField name_input;
     private javax.swing.JTextField pw_input;
     private javax.swing.JTextField tel_input;
+    private javax.swing.JTextField token_input;
     // End of variables declaration//GEN-END:variables
 }
