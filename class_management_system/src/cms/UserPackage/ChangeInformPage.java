@@ -1,47 +1,28 @@
 /*
 작성자 : 이혜리
-기능 : 회원가입
+기능 : 회원 정보 수정
  */
 package cms.UserPackage;
 
 import cms.ConnectDB.ConnectDB;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author 이혜리
  */
-public class JoinPage extends javax.swing.JFrame {
+public class ChangeInformPage extends javax.swing.JFrame {
 
     /**
-     * Creates new form Join
+     * Creates new form ChangeInformPage
      */
-    public JoinPage() {
+    public ChangeInformPage() {
         initComponents();
-    }
-
-    String type = null;
-
-    public boolean UserTypeCheck() {    // 사용자를 구분하기 위함.
-
-        char first = id_input.getText().charAt(0);
-
-        if (first == 'S') {
-            type = "1";
-        } else if (first == 'A') {
-            type = "2";
-        } else if (first == 'P') {
-            type = "3";
-        } else {
-            JOptionPane.showMessageDialog(null, "옳바르지 않은 사용자 유형입니다.");
-            id_input.setText(null);
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -63,11 +44,11 @@ public class JoinPage extends javax.swing.JFrame {
         name_input = new javax.swing.JTextField();
         tel_input = new javax.swing.JTextField();
         email_input = new javax.swing.JTextField();
-        join_button = new javax.swing.JButton();
+        changeInform_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("아이디(학번)");
+        jLabel1.setText("아이디 (삭제 필요)");
 
         jLabel2.setText("비밀번호");
 
@@ -77,10 +58,10 @@ public class JoinPage extends javax.swing.JFrame {
 
         jLabel5.setText("이메일");
 
-        join_button.setText("회원가입");
-        join_button.addActionListener(new java.awt.event.ActionListener() {
+        changeInform_button.setText("정보 수정");
+        changeInform_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                join_buttonActionPerformed(evt);
+                changeInform_buttonActionPerformed(evt);
             }
         });
 
@@ -91,88 +72,98 @@ public class JoinPage extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(77, 77, 77)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(70, 70, 70)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3))
-                        .addGap(63, 63, 63)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5))
+                                .addGap(30, 30, 30)))
+                        .addGap(58, 58, 58)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(id_input, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                            .addComponent(id_input, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
                             .addComponent(pw_input)
                             .addComponent(name_input)
                             .addComponent(tel_input)
                             .addComponent(email_input)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(149, 149, 149)
-                        .addComponent(join_button)))
-                .addContainerGap(85, Short.MAX_VALUE))
+                        .addGap(159, 159, 159)
+                        .addComponent(changeInform_button)))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(70, 70, 70)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(id_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(pw_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(id_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(pw_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3))
                     .addComponent(name_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(tel_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(email_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addComponent(join_button)
-                .addContainerGap())
+                .addGap(31, 31, 31)
+                .addComponent(changeInform_button)
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void join_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_join_buttonActionPerformed
+    private void changeInform_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeInform_buttonActionPerformed
         // TODO add your handling code here:
         ConnectDB db = new ConnectDB();
         Connection conn = null;
         PreparedStatement ps = null;
+        Statement st = null;
+        ResultSet rs = null;
 
-        boolean usertype = UserTypeCheck();
+        String id = id_input.getText();
+        String pw = pw_input.getText();
+        String name = name_input.getText();
+        String tel = tel_input.getText();
+        String email = email_input.getText();
 
         try {
             conn = db.getConnection();
-            ps = conn.prepareStatement("insert into Client values(?,?,?,?,?,?,?,?)");
+            st = conn.createStatement();
+            rs = st.executeQuery("select id from Client");
 
-            if (usertype) {
-                ps.setString(1, id_input.getText());
-                ps.setString(2, pw_input.getText());
-                ps.setString(3, type);   // 사용자 유형
-                ps.setInt(4, 0);    // 경고
-                ps.setString(5, name_input.getText());
-                ps.setString(6, tel_input.getText());
-                ps.setString(7, email_input.getText());
+            ArrayList<String> id_list = new ArrayList<String>();
 
-                ps.executeUpdate();
+            while (rs.next()) {
+                id_list.add(rs.getString("id"));
+            }
 
-                JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");
+            for (int i = 0; i < id_list.size(); i++) {
+                if (id_input.getText().equals(id_list.get(i))) {
+                    ps = conn.prepareStatement("update Client set id='" + id + "',pw='" + pw + "',name='" + name + "', tel='" + tel + "', email='" + email + "' where id='" + id + "'");
+                    ps.executeUpdate();
+
+                    JOptionPane.showMessageDialog(null, "정보수정이 완료되었습니다.");
+                }
             }
             conn.close();
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "기존에 있는 회원입니다.");
-            id_input.setText(null);
         }
-    }//GEN-LAST:event_join_buttonActionPerformed
+    }//GEN-LAST:event_changeInform_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -191,26 +182,26 @@ public class JoinPage extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JoinPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChangeInformPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JoinPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChangeInformPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JoinPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChangeInformPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JoinPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChangeInformPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JoinPage().setVisible(true);
+                new ChangeInformPage().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton changeInform_button;
     private javax.swing.JTextField email_input;
     private javax.swing.JTextField id_input;
     private javax.swing.JLabel jLabel1;
@@ -218,7 +209,6 @@ public class JoinPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JButton join_button;
     private javax.swing.JTextField name_input;
     private javax.swing.JTextField pw_input;
     private javax.swing.JTextField tel_input;
