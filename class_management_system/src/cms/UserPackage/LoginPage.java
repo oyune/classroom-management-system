@@ -4,6 +4,7 @@
  */
 package cms.UserPackage;
 
+import cms.ConnectDB.ConnectDB;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -100,18 +101,13 @@ public class LoginPage extends javax.swing.JFrame {
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
         // TODO add your handling code here:
-                Connection conn = null;
+        ConnectDB db = new ConnectDB();
+        Connection conn=null;
         Statement st= null;
         ResultSet rs = null;
         
         try{
-            String url="jdbc:oracle:thin:@sedb.deu.ac.kr:1521:orcl";
-            String username="B20203155";
-            String password="20203155";
-            
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-            conn=DriverManager.getConnection(url,username,password);
-            
+            conn=db.getConnection();
             st = conn.createStatement();
             rs=st.executeQuery("select id, pw from client");
             
@@ -134,20 +130,9 @@ public class LoginPage extends javax.swing.JFrame {
             if(login==0){
                 JOptionPane.showMessageDialog(null, "로그인 실패"); 
             }
-          
-        } catch (ClassNotFoundException ex) {
+           conn.close();
+        }  catch (Exception ex) {
             ex.printStackTrace();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }finally {
-            try {
-                if (conn != null && !conn.isClosed()) {
-                    conn.close();
-                }
-              
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
         }
     }//GEN-LAST:event_loginActionPerformed
 
