@@ -35,12 +35,12 @@ public class JoinPage extends javax.swing.JFrame {
 
         if (first == 'S') {
             type = "1";
-        } else if (first == 'A') {
+        }
+        if (first == 'A') {
             type = "2";
-        } else if (first == 'P') {
+        }
+        if (first == 'P') {
             type = "3";
-        } else {
-            return false;
         }
         return true;
     }
@@ -59,7 +59,6 @@ public class JoinPage extends javax.swing.JFrame {
             ArrayList<String> t_list = new ArrayList<String>();
 
             while (rs.next()) {
-                System.out.println(rs.getString("token"));
                 t_list.add(rs.getString("token"));
             }
 

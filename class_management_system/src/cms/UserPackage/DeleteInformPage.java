@@ -113,7 +113,7 @@ public class DeleteInformPage extends javax.swing.JFrame {
                 }
             }
             if (ch == 0) {
-                JOptionPane.showMessageDialog(null, "없는 정보입니다. 다시 입력해주세요.");
+                JOptionPane.showMessageDialog(null, "잘못된 정보입니다. 다시 입력해주세요.");
                 pw_input.setText(null);
             }
             conn.close();
