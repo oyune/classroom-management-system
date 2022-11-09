@@ -4,6 +4,7 @@
  */
 package cms.UserPackage;
 
+import cms.ConnectDB.ConnectDB;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -122,19 +123,14 @@ public class JoinPage extends javax.swing.JFrame {
 
     private void join_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_join_buttonActionPerformed
         // TODO add your handling code here:
-         Connection conn = null;
+        ConnectDB db = new ConnectDB();
+        Connection conn = null;
         PreparedStatement ps = null;
-        
-        try{
-            String url="jdbc:oracle:thin:@sedb.deu.ac.kr:1521:orcl";
-            String username="B20203155";
-            String password="20203155";
-            
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-            conn=DriverManager.getConnection(url,username,password);
-            
+
+        try {
+            conn = db.getConnection();
             ps = conn.prepareStatement("insert into Client values(?,?,?,?,?,?,?,?)");
-            
+
             ps.setString(1, id_input.getText());
             ps.setString(2, pw_input.getText());
             ps.setInt(3, 1);    // 인증여부
@@ -143,23 +139,16 @@ public class JoinPage extends javax.swing.JFrame {
             ps.setString(6, name_input.getText());
             ps.setString(7, tel_input.getText());
             ps.setString(8, email_input.getText());
-            
+
             ps.executeUpdate();
 
-            JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");       
-        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");
+
+            conn.close();
+        } catch (Exception ex) {
             ex.printStackTrace();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }finally {
-            try {
-                if (conn != null && !conn.isClosed()) {
-                    conn.close();
-                }
-              
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+            JOptionPane.showMessageDialog(null, "기존에 있는 회원입니다.");
+            id_input.setText(null);
         }
     }//GEN-LAST:event_join_buttonActionPerformed
 
